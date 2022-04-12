@@ -41,6 +41,8 @@ class MyForegroundService : Service() {
                 delay(1000L)
                 log("Timer $i")
             }
+            // остановка сервиса внитри самого сервиса
+            stopSelf()
         }
         return START_STICKY
     }
