@@ -7,7 +7,11 @@ import android.os.IBinder
 import android.util.Log
 import kotlinx.coroutines.*
 
-// нужно зарегестрировать в манифесте
+/* нужно зарегестрировать в манифесте
+* с 26 проблемы с сервисами;
+* при пересоздании onStartCommand не вызывается, сразу onDestroy
+* нужно уведомлять пользователя о работе в фоне(на протяжении всего времени)
+* */
 class MyService : Service() {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
