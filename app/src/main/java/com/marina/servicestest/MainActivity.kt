@@ -30,5 +30,14 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        binding.intentService.setOnClickListener {
+            // в методе startForegroundService мы обещаем,
+            // что в течении 5 секунд после старта сервиса, покажем уведомление
+            ContextCompat.startForegroundService(
+                this,
+                MyIntentService.newIntent(this)
+            )
+        }
+
     }
 }
