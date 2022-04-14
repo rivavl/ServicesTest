@@ -8,6 +8,8 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.marina.servicestest.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -68,6 +70,29 @@ class MainActivity : AppCompatActivity() {
 
         binding.jobIntentService.setOnClickListener {
             MyJobIntentService.enqueue(this, page++)
+        }
+
+        binding.workManager.setOnClickListener {
+            // лучше передавать контекст всего приложения,
+            // чтобы не было утечек памяти, когда активити уже не существует,
+            // а workManager еще работает
+            val workManager = WorkManager.getInstance(applicationContext)
+
+            /*
+            * второй параметр отвечает за действия при запуске работы,
+            *  которая уже была запущена
+            *       APPEND - новый положен в очередь,
+            * если ошибка, она распространится на все сервисы в очереди
+            *       REPLACE - старый заменяется новым
+            *       APPEND_OR_REPLACE - новый положен в очередь,
+            * в случае ошибки создается новая цепочка
+            *       KEEP - старый продолжает работу, новый игнорируется
+            * */
+            workManager.enqueueUniqueWork(
+                MyWorker.WORK_NAME,
+                ExistingWorkPolicy.APPEND,
+                MyWorker.makeRequest(page++)
+            )
         }
 
     }
